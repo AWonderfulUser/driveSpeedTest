@@ -1,6 +1,7 @@
 #include <iostream>
 #include "main.hpp"
 #include <fstream>
+#include <sstream>
 
 std::ifstream::pos_type getFileSize(const std::string filename)
 {
@@ -33,16 +34,27 @@ void writeFile(const std::string content, const std::string dest) {
     file.close();
 }
 
+
+void formatElapsedTime(const std::chrono::duration<double> time, const std::string message) {
+    std::chrono::duration<double> elapsed_seconds = time;
+    std::cout << "Elapsed " << elapsed_seconds.count() << "s to " << message << std::endl;
+}
+
 int main() {
+    // Config
     askForAVariable("Please enter the source path: ", &sourceFilePath);
     sourceFileSize = getFileSize(sourceFilePath);
     if (sourceFileSize == false) {
         std::cout << "Could not read source file" << std::endl;
         return 1;
     }
-    askForAVariable("Please enter the destination path: ", &destFilePath);
+    askForAVariable("Please enter the destination path (where the files will be copied to): ", &destFilePath);
+    
+    // Perform writing test
     sourceContent = readFile(sourceFilePath);
+    auto start = std::chrono::system_clock::now();
     writeFile(sourceContent, destFilePath);
-
+    auto end = std::chrono::system_clock::now();
+    formatElapsedTime(end-start, "write");
     return 0;
 }
