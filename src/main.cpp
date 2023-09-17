@@ -37,7 +37,7 @@ void writeFile(const std::string content, const std::string dest) {
 
 void formatElapsedTime(const std::chrono::duration<double> time, const std::string message) {
     std::chrono::duration<double> elapsed_seconds = time;
-    std::cout << "Elapsed " << elapsed_seconds.count() << "s to " << message << std::endl;
+    std::cout << "Elapsed " << std::setprecision(25) << elapsed_seconds.count() << "s to " << message << std::endl;
 }
 
 int main() {
@@ -49,12 +49,17 @@ int main() {
         return 1;
     }
     askForAVariable("Please enter the destination path (where the files will be copied to): ", &destFilePath);
-    
+    askForAVariable("Please enter the number of times you want to perform the writing test: ", &writingTestTime);
+    askForAVariable("Please enter the number of times you want to perform the reading test: ", &readingTestTime);
+
     // Perform writing test
     sourceContent = readFile(sourceFilePath);
     auto start = std::chrono::system_clock::now();
-    writeFile(sourceContent, destFilePath);
+    int writingtests = std::stoi(writingTestTime);
+    for(int x = 0; x < writingtests; x++) {
+        writeFile(sourceContent, destFilePath);
+    }
     auto end = std::chrono::system_clock::now();
-    formatElapsedTime(end-start, "write");
+    formatElapsedTime(end-start, "write " + writingTestTime + " times " + std::to_string(sourceFileSize) + " bytes");
     return 0;
 }
