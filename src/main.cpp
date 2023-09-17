@@ -12,10 +12,15 @@ std::ifstream::pos_type getFileSize(const std::string filename)
     }
 }
 
+void askForAVariable(const std::string sentence, std::string* path) {
+    std::cout << sentence;
+    std::cin >> *path;
+}
+
 int main() {
-    std::cout << "Please enter the path of the file you want to copy: ";
-    std::cin >> sourceFilePath;
-    sourceFileSize = getFileSize();
+    std::string ask = "Please enter the path of the file you want to copy: ";
+    askForAVariable(ask, &sourceFilePath);
+    sourceFileSize = getFileSize(sourceFilePath);
     if (sourceFileSize == false) {
         std::cout << "Could not read source file" << std::endl;
         return 1;
