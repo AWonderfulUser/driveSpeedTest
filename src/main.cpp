@@ -28,6 +28,11 @@ std::string readFile(const std::string path) {
     return string;
 }
 
+void onlyReadFile(const std::string path) {
+    std::ifstream file(path, std::ios::in | std::ios::binary);
+    while(getline(file, line)) { }
+}
+
 void writeFile(const std::string content, const std::string dest) {
     std::ofstream file(dest, std::ios::out | std::ios::trunc);
     file << content;
@@ -39,6 +44,8 @@ void formatElapsedTime(const std::chrono::duration<double> time, const std::stri
     std::chrono::duration<double> elapsed_seconds = time;
     std::cout << "Elapsed " << std::setprecision(25) << elapsed_seconds.count() << "s to " << message << std::endl;
 }
+
+
 
 int main() {
     // Config
@@ -54,12 +61,21 @@ int main() {
 
     // Perform writing test
     sourceContent = readFile(sourceFilePath);
-    auto start = std::chrono::system_clock::now();
     int writingtests = std::stoi(writingTestTime);
+    auto start = std::chrono::system_clock::now();
     for(int x = 0; x < writingtests; x++) {
         writeFile(sourceContent, destFilePath);
     }
     auto end = std::chrono::system_clock::now();
     formatElapsedTime(end-start, "write " + writingTestTime + " times " + std::to_string(sourceFileSize) + " bytes");
+
+    // Perform reading test
+    auto readStart = std::chrono::system_clock::now();
+    int readingtests = std::stoi(readingTestTime);
+    for(int x = 0; x < readingtests; x++) {
+        onlyReadFile(destFilePath);
+    }
+    auto endStart = std::chrono::system_clock::now();
+    formatElapsedTime(endStart-readStart, "read " + readingTestTime + " times " + std::to_string(sourceFileSize) + " bytes");
     return 0;
 }
