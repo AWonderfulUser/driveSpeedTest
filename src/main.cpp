@@ -17,7 +17,7 @@ void askForAVariable(const std::string sentence, std::string* path) {
     std::cin >> *path;
 }
 
-std::string readFile(std::string path) {
+std::string readFile(const std::string path) {
     std::string string;
     std::ifstream file(path, std::ios::in | std::ios::binary);
     while(getline(file, line)) {
@@ -25,6 +25,12 @@ std::string readFile(std::string path) {
     }
     file.close();
     return string;
+}
+
+void writeFile(const std::string content, const std::string dest) {
+    std::ofstream file(dest, std::ios::out | std::ios::trunc);
+    file << content;
+    file.close();
 }
 
 int main() {
@@ -35,7 +41,8 @@ int main() {
         return 1;
     }
     askForAVariable("Please enter the destination path: ", &destFilePath);
-    std::string sourceContent = readFile(sourceFilePath);
+    sourceContent = readFile(sourceFilePath);
+    writeFile(sourceContent, destFilePath);
 
     return 0;
 }
